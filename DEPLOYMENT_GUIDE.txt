@@ -1,0 +1,237 @@
+# 🚀 INDIGO-LB DEPLOYMENT GUIDE
+
+## 📦 Package: indigo-lb_deployment.zip (8.89 MB)
+
+---
+
+## ⚠️ CRITICAL: BEFORE UPLOADING TO NAMECHEAP
+
+### 1. UPDATE EMAIL ADDRESS IN contact.php
+
+Open `contact.php` and change **line 44**:
+
+```php
+$to = 'info@indigo-lb.com'; // ← CHANGE THIS TO YOUR EMAIL!
+```
+
+**Where to find the correct email:**
+- Check with client: "What email should contact form submissions go to?"
+- Common patterns: `info@indigo-lb.com`, `contact@indigo-lb.com`, `admin@indigo-lb.com`
+
+---
+
+## 📋 What's in the Package?
+
+✅ **8 HTML Pages** (1.7 MB):
+- index.html
+- about-indigo.html
+- contact-us.html
+- animation.html  
+- commercials.html
+- branding.html
+- digital-marketing.html
+- web-services.html
+
+✅ **106 Images** (8.66 MB):
+- All localized in `images/` folder
+- No external CDN dependencies
+
+✅ **11 CSS Files** (339 KB):
+- Page-specific styles (static_style_*.css)
+- fonts.css, effects.css, lightbox.css
+
+✅ **7 JavaScript Files** (394 KB):
+- jQuery, lightbox, spimeengine, xprs_helper
+
+✅ **4 Font Files** (118 KB):
+- Helvetica Neue web fonts (eot, svg, ttf, woff)
+
+✅ **Backend Files:**
+- `contact.php` - Email handler (⚠️ UPDATE EMAIL!)
+- `.htaccess` - Apache config (HTTPS, clean URLs, security)
+
+✅ **Documentation:**
+- `README.md` - Full project documentation
+
+---
+
+## 🎯 Namecheap Deployment Steps
+
+1. **Update Email in contact.php** (see above)
+
+2. **Login to Namecheap cPanel**
+   - Go to your Namecheap dashboard
+   - Select your domain
+   - Click "cPanel" button
+
+3. **Navigate to File Manager**
+   - Open File Manager
+   - Go to `public_html` directory
+
+4. **Delete Existing Files** (if replacing old site)
+   - Select all files in `public_html`
+   - Click "Delete"
+   - Confirm deletion
+
+5. **Upload ZIP Package**
+   - Click "Upload" button
+   - Select `indigo-lb_deployment.zip`
+   - Wait for upload to complete
+
+6. **Extract ZIP**
+   - Right-click on `indigo-lb_deployment.zip`
+   - Select "Extract"
+   - Extract to current directory (`public_html`)
+   - Click "Extract Files"
+
+7. **Delete ZIP file**
+   - Select `indigo-lb_deployment.zip`
+   - Click "Delete"
+
+8. **Set Permissions** (if needed)
+   - Select all files
+   - Click "Permissions"
+   - Files: 644
+   - Folders: 755
+
+9. **Visit Your Website**
+   - Open: `https://indigo-lb.com`
+   - Should see green padlock (SSL)
+
+10. **Test Contact Form**
+    - Fill out contact form
+    - Click "Send"
+    - Check email inbox for submission
+
+---
+
+## 🔧 .htaccess Configuration
+
+### Current Settings:
+
+✅ **HTTPS Redirect:** Forces all HTTP traffic to HTTPS  
+✅ **Clean URLs:** Removes .html extensions (`/about-indigo` instead of `/about-indigo.html`)  
+✅ **Non-www:** Forces `indigo-lb.com` (not `www.indigo-lb.com`)  
+✅ **Security Headers:** XSS protection, clickjacking prevention  
+✅ **Compression:** Gzip for faster loading  
+✅ **Browser Caching:** 1 year for images, 1 month for CSS/JS  
+
+### To Use www Instead:
+
+Edit `.htaccess` lines 17-25:
+
+```apache
+# Comment out non-www section (lines 20-21):
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Uncomment www section (lines 17-18):
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+```
+
+---
+
+## 🔒 SSL Certificate
+
+- Namecheap provides **FREE SSL** (Let's Encrypt)
+- Activates automatically within 24 hours
+- `.htaccess` HTTPS redirect works once SSL is active
+- If site shows "Not Secure" initially, wait 24 hours for SSL activation
+
+---
+
+## ✅ Post-Deployment Checklist
+
+After uploading, verify:
+
+- [ ] Website loads with HTTPS (green padlock)
+- [ ] All 8 pages accessible and display correctly
+- [ ] Images load properly (no broken images)
+- [ ] Navigation works (all menu links functional)
+- [ ] Contact form submits successfully
+- [ ] Email received at correct address (CHECK YOUR INBOX!)
+- [ ] Mobile responsive design working (test on phone)
+- [ ] No console errors (press F12, check Console tab)
+- [ ] Fonts display correctly (match live site)
+- [ ] Page load speed is acceptable
+
+---
+
+## 🐛 Troubleshooting
+
+### Contact Form Not Sending Emails
+
+**Possible Issues:**
+1. Wrong email address in `contact.php` (line 44)
+2. PHP `mail()` function disabled on server
+3. Emails going to spam folder
+
+**Solutions:**
+1. Double-check email address in `contact.php`
+2. Check spam/junk folder
+3. Ask Namecheap support to enable PHP mail() function
+4. Consider using PHPMailer or SMTP (contact developer)
+
+### Images Not Loading
+
+**Possible Issues:**
+1. Incorrect file permissions
+2. Case-sensitive file paths (Linux hosting)
+
+**Solutions:**
+1. Set folder permissions to 755, files to 644
+2. Verify image paths match exact filename case
+
+### Pages Show 404 Error
+
+**Possible Issues:**
+1. Clean URLs not working (.htaccess not loaded)
+2. mod_rewrite not enabled
+
+**Solutions:**
+1. Verify `.htaccess` file uploaded correctly
+2. Ask Namecheap to enable mod_rewrite
+3. Access pages with `.html` extension until fixed
+
+### HTTPS Not Working
+
+**Possible Issues:**
+1. SSL certificate not activated yet
+2. Mixed content (HTTP resources on HTTPS page)
+
+**Solutions:**
+1. Wait 24 hours for SSL activation
+2. Check for http:// links in HTML (should be https:// or protocol-relative)
+
+---
+
+## 📞 Support Contacts
+
+**Namecheap Support:**
+- Live Chat: Available 24/7
+- Email: support@namecheap.com
+- Phone: 1-800-371-6222
+
+**Common Questions to Ask:**
+- "Can you enable mod_rewrite for my domain?"
+- "Can you verify PHP mail() function is enabled?"
+- "Why is my SSL certificate not active yet?"
+
+---
+
+## 🎉 Deployment Complete!
+
+Once all checks pass, the site is live and ready for use.
+
+**Next Steps:**
+- Share URL with client: `https://indigo-lb.com`
+- Monitor contact form submissions
+- Consider setting up Google Analytics
+- Add to Google Search Console for SEO
+
+---
+
+**Deployment Date:** February 12, 2026  
+**Project Status:** ✅ COMPLETED  
+**Package Ready:** ✅ YES
