@@ -342,6 +342,66 @@ foreach ($file in $files) {
 
 ---
 
+### 🔥 FIX #8: .htaccess HTML Encoding Bug - 500 Internal Server Error (Feb 18, 2026)
+
+**Problem:** Website returning 500 Internal Server Error on all pages when deployed to Webuzo/production.
+
+**Root Cause:** .htaccess file was corrupted with HTML-encoded entities instead of actual brackets:
+```apache
+# WRONG (causing 500 error):
+&lt;IfModule mod_rewrite.c&gt;
+&lt;/IfModule&gt;
+
+# CORRECT:
+<IfModule mod_rewrite.c>
+</IfModule>
+```
+
+**Impact:**
+- Apache cannot parse HTML entities (`&lt;` `&gt;`) in .htaccess files
+- Results in immediate 500 Internal Server Error for entire site
+- Prevents any page from loading
+- Affects both homepage and all subpages
+
+**How It Happened:**
+- .htaccess was likely created/edited through a tool that HTML-encoded the content
+- File appeared correct in some editors but contained `&lt;` and `&gt;` instead of `<` and `>`
+
+**Solution:**
+```powershell
+# Replace all HTML entities with actual characters
+$content = Get-Content ".htaccess" -Raw -Encoding UTF8
+$fixed = $content -replace '&lt;', '<' -replace '&gt;', '>'
+$fixed | Set-Content ".htaccess" -Encoding UTF8 -NoNewline
+```
+
+**Verification:**
+```powershell
+# Check for HTML encoding
+$content = Get-Content ".htaccess" -Raw
+if ($content -match '&lt;|&gt;') {
+    Write-Host "❌ Still has HTML encoding"
+} else {
+    Write-Host "✅ Clean"
+}
+```
+
+**Files Fixed:**
+- ✅ .htaccess (Feb 18, 2026)
+- ✅ .htaccess_minimal (already clean)
+
+**Deployment Status:**
+- ✅ Fixed in source code
+- ✅ Committed to git (commit 959ffda)
+- ✅ Pushed to GitHub
+- ✅ Updated deployment ZIP (8.89 MB)
+- ⏳ Ready for re-upload to Webuzo/production
+
+**Testing:**
+After uploading fixed .htaccess, the site should load without 500 errors. Browser console may show Webuzo branding warnings (ignore those).
+
+---
+
 ### 🔥 CRITICAL: Indigo Platform Multi-Page vbid CSS Fix
 
 **⚠️ THIS IS THE #1 ISSUE FOR INDIGO MULTI-PAGE SITES ⚠️**
