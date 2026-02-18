@@ -402,6 +402,59 @@ After uploading fixed .htaccess, the site should load without 500 errors. Browse
 
 ---
 
+### 🔥 FIX #9: Simplify .htaccess for Webuzo Compatibility (Feb 18, 2026)
+
+**Problem:** Website still returning 500 Internal Server Error after fixing HTML encoding. Other websites (matrixbs) work fine on same Webuzo server.
+
+**Root Cause:** Complex .htaccess directives not supported by Webuzo shared hosting:
+- `RewriteBase /` - can cause 500 errors on shared hosting
+- `Header always set` vs `Header set` - "always" modifier not supported
+- `<FilesMatch "^\.">` - complex regex pattern causing issues
+- `<IfModule mod_php7.c>` - PHP settings not allowed on shared hosting
+- Duplicate unset directives for X-Powered-By header
+
+**Solution:** Simplified .htaccess based on proven working matrixbs configuration.
+
+**Key Changes:**
+```apache
+# REMOVED:
+- RewriteBase /
+- Header always set (changed to Header set)
+- Complex <FilesMatch "^\."> pattern
+- PHP settings block
+- Duplicate Header unset directives
+- Overly complex deflate compression rules
+
+# KEPT (essential):
+- HTTPS redirect
+- Clean URLs (.html removal)
+- Security headers (simplified)
+- Browser caching
+- GZIP compression (simplified)
+- Directory browsing protection
+```
+
+**Before:** 148 lines with complex enterprise-level directives  
+**After:** 80 lines with Webuzo-compatible directives
+
+**Files Modified:**
+- ✅ .htaccess (simplified from 148 to 80 lines)
+- ✅ Backup created (.htaccess.backup)
+
+**Deployment Status:**
+- ✅ Simplified in source code
+- ✅ Committed to git (commit 456ad21)
+- ✅ Pushed to GitHub
+- ✅ Updated deployment ZIP (8.89 MB)
+- ⏳ Ready for re-upload to Webuzo
+
+**Testing:**
+Upload new .htaccess and verify site loads without 500 errors. This configuration is proven to work on Webuzo (tested on matrixbs project).
+
+**Reference:** Based on working .htaccess from matrixbs project.
+
+---
+
 ### 🔥 CRITICAL: Indigo Platform Multi-Page vbid CSS Fix
 
 **⚠️ THIS IS THE #1 ISSUE FOR INDIGO MULTI-PAGE SITES ⚠️**
