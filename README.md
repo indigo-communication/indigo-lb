@@ -293,6 +293,55 @@ $content = Get-Content "file.html" -Raw
 
 ---
 
+### 🔥 FIX #7: Viewport Meta Tag Regression in index.html (Feb 18, 2026)
+
+**Problem:** index.html homepage showing oversized text, wrong layout, and mobile view on desktop.
+
+**Root Cause:** Viewport meta tag in index.html was accidentally set to fixed width instead of responsive width:
+```html
+<!-- WRONG (in index.html): -->
+<meta name="viewport" content="width=1280, initial-scale=1.0"/>
+
+<!-- CORRECT (should match other pages): -->
+<meta name="viewport" content="width=device-width, maximum-scale=1"/>
+```
+
+**Impact:** 
+- Homepage displaying in narrow/mobile layout on desktop browsers
+- Text and images oversized
+- Layout not responsive to screen size
+- Inconsistent with other pages (about, services, etc.) which were already fixed
+
+**Solution:** Fixed viewport meta tag in index.html to match other pages.
+
+**Verification:**
+```powershell
+# Check all HTML files for correct viewport
+$files = Get-ChildItem "*.html" | Where-Object { $_.Name -notlike "live_*" }
+foreach ($file in $files) {
+    $content = Get-Content $file.FullName -Raw
+    if ($content -match 'viewport.*width=1280') {
+        Write-Host "$($file.Name) - WRONG viewport"
+    } else {
+        Write-Host "$($file.Name) - Correct viewport"
+    }
+}
+```
+
+**Files Fixed:**
+- ✅ index.html (Feb 18, 2026)
+
+**Deployment Status:**
+- ✅ Fixed in source code
+- ✅ Committed to git (commit 4902bac)
+- ✅ Pushed to GitHub
+- ✅ Updated deployment ZIP (8.89 MB)
+- ⏳ Ready for re-upload to Webuzo/production
+
+**Note:** This fix resolves layout issues reported after initial deployment. All 8 pages now have consistent, responsive viewport configuration.
+
+---
+
 ### 🔥 CRITICAL: Indigo Platform Multi-Page vbid CSS Fix
 
 **⚠️ THIS IS THE #1 ISSUE FOR INDIGO MULTI-PAGE SITES ⚠️**
