@@ -225,6 +225,74 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
 ---
 
+### 🔥 FIX #6: HTTPS/Mixed Content Security Fix
+
+**Issue:** Insecure HTTP external links cause mixed content warnings on HTTPS deployment.
+
+**Problem Identified (From Limen Groupe Reference):**
+When deploying to HTTPS servers, HTTP URLs (instead of HTTPS) cause:
+- Browser "Not Secure" warnings despite valid SSL
+- Mixed content blocking by browsers
+- Potential security vulnerabilities
+- SEO penalties from search engines
+
+**Symptoms:**
+- Browser console shows mixed content warnings
+- External resources may fail to load
+- Social media links using HTTP instead of HTTPS
+
+**Files Fixed:**
+- `index.html` - Fixed 1 HTTP URL (indigo-cy.com link)
+- `about-indigo.html` - Fixed 1 HTTP URL (indigo-cy.com link)
+- `digital-marketing.html` - Fixed 26 HTTP URLs (social media links)
+
+**URLs Converted to HTTPS:**
+```
+http://www.indigo-cy.com       → https://www.indigo-cy.com
+http://www.linkedin.com         → https://www.linkedin.com
+http://www.youtube.com          → https://www.youtube.com
+http://www.facebook.com         → https://www.facebook.com
+http://www.instagram.com        → https://www.instagram.com
+```
+
+**Total Fixed:** 28 HTTP URLs → HTTPS
+
+**Solution Applied:**
+```powershell
+# Replace all HTTP external URLs with HTTPS
+$content = Get-Content "file.html" -Raw -Encoding UTF8
+$content = $content -creplace 'href="http://www.', 'href="https://www.'
+$content = $content -creplace 'src="http://', 'src="https://'
+$content | Set-Content "file.html" -Encoding UTF8 -NoNewline
+```
+
+**Verification:**
+```powershell
+# Check for remaining HTTP URLs
+$content = Get-Content "file.html" -Raw
+[regex]::Matches($content, 'href="http://(?!127\.0\.0\.1|localhost)|src="http://').Count
+# Result: 0 (all fixed!)
+```
+
+**Security Benefits:**
+- ✅ No mixed content warnings
+- ✅ All external resources load securely
+- ✅ Better SEO ranking (Google prefers HTTPS)
+- ✅ Improved user trust (green padlock)
+- ✅ Protects against man-in-the-middle attacks
+
+**Prevention for Future Projects:**
+1. Always use `https://` for external links (never `http://`)
+2. Avoid protocol-relative URLs (`//domain.com`) - use explicit `https://`
+3. Test on HTTPS server before deployment
+4. Use browser DevTools to check for mixed content warnings
+
+**Reference:** Applied same fix from Limen Groupe project (February 18, 2026)
+
+**Commit Reference:** HTTPS/Mixed Content Security fix applied
+
+---
+
 ### 🔥 CRITICAL: Indigo Platform Multi-Page vbid CSS Fix
 
 **⚠️ THIS IS THE #1 ISSUE FOR INDIGO MULTI-PAGE SITES ⚠️**
