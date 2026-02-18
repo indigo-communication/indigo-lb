@@ -1,8 +1,8 @@
-# Apache Configuration for Indigo LB Website
+﻿# Apache Configuration for Indigo LB Website
 # .htaccess file for Namecheap hosting
 
 # Enable Rewrite Engine
-&lt;IfModule mod_rewrite.c&gt;
+<IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
     
@@ -28,10 +28,10 @@
     # Redirect old URLs with .html to clean URLs
     RewriteCond %{THE_REQUEST} ^GET\ /[^\ ]+\.html
     RewriteRule ^(.*)\.html$ /$1 [R=301,L]
-&lt;/IfModule&gt;
+</IfModule>
 
 # Security Headers
-&lt;IfModule mod_headers.c&gt;
+<IfModule mod_headers.c>
     # Prevent clickjacking
     Header always set X-Frame-Options "SAMEORIGIN"
     
@@ -47,10 +47,10 @@
     # Remove sensitive server information
     Header unset X-Powered-By
     Header always unset X-Powered-By
-&lt;/IfModule&gt;
+</IfModule>
 
 # Compression for faster loading
-&lt;IfModule mod_deflate.c&gt;
+<IfModule mod_deflate.c>
     # Compress HTML, CSS, JavaScript, Text, XML and fonts
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/rss+xml
@@ -79,10 +79,10 @@
     BrowserMatch ^Mozilla/4\.0[678] no-gzip
     BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
     Header append Vary User-Agent
-&lt;/IfModule&gt;
+</IfModule>
 
 # Browser Caching for better performance
-&lt;IfModule mod_expires.c&gt;
+<IfModule mod_expires.c>
     ExpiresActive On
     
     # Images
@@ -117,13 +117,13 @@
     
     # HTML
     ExpiresByType text/html "access plus 0 seconds"
-&lt;/IfModule&gt;
+</IfModule>
 
 # Protect sensitive files
-&lt;FilesMatch "^\.">
+<FilesMatch "^\.">
     Order allow,deny
     Deny from all
-&lt;/FilesMatch&gt;
+</FilesMatch>
 
 # Prevent directory browsing
 Options -Indexes
@@ -133,15 +133,15 @@ Options -Indexes
 # ErrorDocument 500 /500.html
 
 # PHP settings
-&lt;IfModule mod_php7.c&gt;
+<IfModule mod_php7.c>
     php_value upload_max_filesize 10M
     php_value post_max_size 10M
     php_value max_execution_time 300
     php_value max_input_time 300
-&lt;/IfModule&gt;
+</IfModule>
 
 # Protect contact.php from direct access (optional)
-# &lt;Files "contact.php"&gt;
+# <Files "contact.php">
 #     Order Allow,Deny
 #     Allow from all
-# &lt;/Files&gt;
+# </Files>
